@@ -1,62 +1,43 @@
+#include <VarSpeedServo.h>
 
-  
-#include <VarSpeedServo.h> 
-// Define the number of servos
-#define SERVOS 2
+// Define the number of servos for the base
+#define BASE_SERVOS 2
+
 // Create the servo objects.
-VarSpeedServo myservo[SERVOS]; 
- 
-const int desired_speed = 75;
- 
-// Attach servos to digital pins on the Arduino
-int servo_pins[SERVOS] = {3,5};
- 
-void setup() {
+VarSpeedServo base_servos[BASE_SERVOS];
 
-  myservo[0].attach(servo_pins[0], 544, 2475);  
-  myservo[1].attach(servo_pins[1], 500, 2475); 
- 
-  // Set initial servo positions 
-  myservo[0].write(0, desired_speed, true);  
-  myservo[1].write(calc_servo_1_angle(90), desired_speed, true);
- 
-  // Wait one second to let servos get into position
+// Assign meaningful names to each servo for clarity
+#define BASE_PAN_SERVO base_servos[0]
+#define BASE_TILT_SERVO base_servos[1]
+
+// Define the pins for each servo
+int servo_pins[BASE_SERVOS] = {3, 5};
+
+const int desired_speed = 75;
+
+void setup() {
+  // Attach servos to digital pins
+  for (int i = 0; i < BASE_SERVOS; i++) {
+    base_servos[i].attach(servo_pins[i]);
+  }
+
+  // Set initial positions for both base servos
+  BASE_PAN_SERVO.write(90, desired_speed, true);
+  BASE_TILT_SERVO.write(90, desired_speed, true);
+
+  // Wait for servos to reach their initial positions
   delay(1000);
 }
-  
-void loop() {  
- 
-    // To most counterclockwise position
-    myservo[0].write(180, desired_speed, true); 
-    // Go to clockwise position
-    myservo[1].write(calc_servo_1_angle(-90), desired_speed, true); 
-    // Go to counterclockwise position
-    myservo[1].write(calc_servo_1_angle(90), desired_speed, true); 
-     myservo[1].write(calc_servo_1_angle(90), desired_speed, true); 
-      myservo[1].write(calc_servo_1_angle(90), desired_speed, true); 
-       myservo[1].write(calc_servo_1_angle(90), desired_speed, true); 
-        myservo[1].write(calc_servo_1_angle(90), desired_speed, true); 
-         myservo[1].write(calc_servo_1_angle(90), desired_speed, true); 
-          myservo[1].write(calc_servo_1_angle(90), desired_speed, true); 
-           myservo[1].write(calc_servo_1_angle(90), desired_speed, true); 
-            myservo[1].write(calc_servo_1_angle(90), desired_speed, true); 
-             myservo[1].write(calc_servo_1_angle(90), desired_speed, true); 
-              myservo[1].write(calc_servo_1_angle(90), desired_speed, true); 
-               myservo[1].write(calc_servo_1_angle(90), desired_speed, true); 
-          myservo[1].write(calc_servo_1_angle(90), desired_speed, true); 
-         myservo[1].write(calc_servo_1_angle(90), desired_speed, true); .
-                 
-    // To most clockwise position
-    myservo[0].write(0, desired_speed, true); 
-    // Wait half a second
-    delay(500);
-}     
- 
-int calc_servo_1_angle (int input_angle) {
-   
-  int result;
- 
-  result = map(input_angle, -90, 90, 0, 180);
- 
-  return result;
-}  
+
+void loop() {
+  // Perform a maniacal waving motion
+  performManiacalMotion();
+}
+
+void performManiacalMotion() {
+  // Rapid, back-and-forth movement to emulate a "maniacal" wave
+  for (int i = 0; i < 5; i++) {
+    BASE_PAN_SERVO.write(45, desired_speed, true);
+    BASE_PAN_SERVO.write(135, desired_speed, true);
+  }
+}

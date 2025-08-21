@@ -1,43 +1,54 @@
-#include <Servo.h>
-Servo servo0;
-Servo servo1;
-Servo servo2;
-Servo servo3;
-int sensorvalue0;
-int sensorvalue1;
-int sensorvalue2;
-int sensorvalue3;
-void setup()
-{
-  pinMode(A0,INPUT);
-  pinMode(3,OUTPUT);
-  servo0.attach(3);
-  
-  pinMode(A1,INPUT);
-  pinMode(5,OUTPUT);
-  servo1.attach(5);
-  
-  pinMode(A2,INPUT);
-  pinMode(6,OUTPUT);
-  servo2.attach(6);
-  
-  pinMode(A3,INPUT);
-  pinMode(9,OUTPUT);
-  servo3.attach(9);
+#include <VarSpeedServo.h>
+
+// Define the number of servos for the arm
+#define ARM_SERVOS 4
+
+// Create the servo objects.
+VarSpeedServo arm_servos[ARM_SERVOS];
+
+// Assign meaningful names to each servo for clarity
+#define SHOULDER_PAN_SERVO arm_servos[0]
+#define SHOULDER_TILT_SERVO arm_servos[1]
+#define ELBOW_SERVO arm_servos[2]
+#define WRIST_SERVO arm_servos[3]
+
+// Define the pins for each servo
+int servo_pins[ARM_SERVOS] = {3, 5, 6, 9};
+
+const int desired_speed = 75;
+
+void setup() {
+  // Attach servos to digital pins
+  for (int i = 0; i < ARM_SERVOS; i++) {
+    arm_servos[i].attach(servo_pins[i]);
+  }
+
+  // Set initial positions for all servos
+  SHOULDER_PAN_SERVO.write(90, desired_speed, true);
+  SHOULDER_TILT_SERVO.write(90, desired_speed, true);
+  ELBOW_SERVO.write(90, desired_speed, true);
+  WRIST_SERVO.write(90, desired_speed, true);
+
+  // Wait for servos to reach their initial positions
+  delay(1000);
 }
 
-void loop()
-{
-  sensorvalue0 = analogRead(A0);
-  sensorvalue0 = map(sensorvalue0, 0, 1023, 0, 180);
-  servo0.write(sensorvalue0);
-  sensorvalue1 = analogRead(A1);
-  sensorvalue1 = map(sensorvalue1, 0, 1023, 0, 180);
-  servo1.write(sensorvalue1);
-  sensorvalue2 = analogRead(A2);
-  sensorvalue2 = map(sensorvalue2, 0, 1023, 0, 180);
-  servo2.write(sensorvalue2);
-  sensorvalue3 = analogRead(A3);
-  sensorvalue3 = map(sensorvalue3, 0, 1023, 0, 180);
-  servo3.write(sensorvalue3);
+void loop() {
+  // Perform a fluid stabbing motion
+  performStabMotion();
+}
+
+void performStabMotion() {
+  // A fluid, coordinated stabbing motion
+  // Shoulder moves forward, elbow extends, wrist flexes
+  SHOULDER_TILT_SERVO.write(45, desired_speed, false);
+  ELBOW_SERVO.write(135, desired_speed, false);
+  WRIST_SERVO.write(60, desired_speed, true);
+  delay(500);
+
+  // Retract the arm
+  SHOULDER_TILT_SERVO.write(90, desired_speed, false);
+  ELBOW_SERVO.write(90, desired_speed, false);
+  WRIST_SERVO.write(90, desired_speed, true);
+  delay(500);
 }
